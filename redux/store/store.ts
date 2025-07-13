@@ -1,5 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import counterReducer from "../slices/counterSlice";
+import roomReducer from "../slices/roomSlice";
 import {
   persistStore,
   persistReducer,
@@ -15,7 +16,7 @@ import storage from "redux-persist/lib/storage";
 // 1. Najpierw zdefiniuj rootReducer
 const rootReducer = combineReducers({
   counter: counterReducer,
-  // ... inne reducery
+  room: roomReducer,
 });
 
 // 2. Następnie zastosuj persist

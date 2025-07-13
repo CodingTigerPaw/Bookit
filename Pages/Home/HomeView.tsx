@@ -1,4 +1,5 @@
 "use client";
+import { Heading } from "@/shared/heading";
 import { ReactNode } from "react";
 
 // type room = {
@@ -22,6 +23,7 @@ type HomeViewProps = {
 export const HomeView = ({ rooms }: HomeViewProps) => {
   return (
     <>
+      <Heading title="Avaliabile Rooms" />
       <h1>{rooms}</h1>
     </>
   );

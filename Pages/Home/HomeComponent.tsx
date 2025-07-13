@@ -1,20 +1,50 @@
 "use client";
 import rooms from "@/data/rooms.json";
+import { useNexus } from "@/utils/hooka/useNexus";
 import { HomeView } from "./HomeView";
-import { useAppSelector } from "@/redux/store/hooks";
+import { RoomCard } from "@/shared/roomCard";
 
 export const HomeComponent = () => {
-  const count = useAppSelector((state) => state.counter.value);
+  type roomType = {
+    $id: string;
+    user_id: string;
+    name: string;
+    description: string;
+    sqft: number;
+    capacity: number;
+    address: string;
+    amenities: string;
+    availability: string;
+    price_per_hour: number;
+    image: string;
+  };
 
-  const isRooms = () => rooms.length > 0;
+  const getRoomValue = useNexus({
+    slice: "room",
+    type: "GET",
+    selectorKey: "rooms",
+  }) as roomType[];
 
-  const mapRooms = () =>
-    rooms.map((room) => <h3 key={room.$id}>{room.name}</h3>);
+  const setRooms = useNexus({
+    slice: "room",
+    type: "POST",
+    data: rooms,
+  });
 
-  const roomsData = isRooms() ? mapRooms() : [];
+  const clearRooms = useNexus({
+    slice: "room",
+    type: "DELETE",
+  });
+
+  const roomsData = getRoomValue.map((room) => (
+    <RoomCard key={room.$id} room={room} />
+  ));
+
   return (
     <>
-      {count}
+      <button onClick={() => setRooms(rooms)}>set rooms</button>
+      <button onClick={() => clearRooms()}>clear rooms</button>
+
       <HomeView rooms={roomsData} />
     </>
   );
