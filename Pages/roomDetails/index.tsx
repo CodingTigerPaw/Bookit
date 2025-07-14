@@ -1,0 +1,1 @@
+export { RoomDetailsComponent } from "./roomDetailsComponent";

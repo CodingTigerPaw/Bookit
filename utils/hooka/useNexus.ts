@@ -1,3 +1,4 @@
+import { roomType } from "@/redux/types/roomType";
 import { useDispatch, useSelector } from "react-redux";
 import { Action, Dispatch } from "redux";
 
@@ -10,14 +11,12 @@ interface NexusQuery<R = unknown> {
   slice: string;
   type: "GET";
   selectorKey?: string;
-  __returnType?: R; // Pomocniczy typ dla inferencji
+  __returnType?: R;
 }
 
 interface NexusCommand<T = unknown> {
   slice: string;
   type: "POST" | "PUT" | "DELETE";
-  // 'data' jest tutaj opcjonalne w definicji komendy,
-  // ponieważ będzie przekazywane jako argument do zwracanej funkcji
   data?: T;
 }
 
@@ -27,13 +26,8 @@ interface AppState {
     value: number;
   };
   room: {
-    rooms: any;
+    rooms: roomType;
   };
-  // Dodaj inne wycinki stanu, jeśli ich używasz, np.
-  // user: {
-  //   data: any;
-  //   isLoading: boolean;
-  // };
 }
 
 // Strategie dla różnych typów operacji
@@ -47,8 +41,7 @@ const NexusStrategies = {
         if (sliceState) {
           const selectedValue =
             sliceState[params.selectorKey as keyof typeof sliceState];
-          return selectedValue; // <--- Upewnij się, że to faktycznie zmienia referencję
-          // (dla prymitywów jest ok, dla obiektów trzeba tworzyć nowe)
+          return selectedValue;
         }
         return undefined;
       });
@@ -62,7 +55,6 @@ const NexusStrategies = {
   },
 };
 
-// Mapa akcji (dostosuj do swoich akcji Redux)
 const actionMap: ActionMap = {
   counter: {
     GET: "counter/getValue",
@@ -79,7 +71,6 @@ const actionMap: ActionMap = {
 };
 
 // Deklaracje przeciążeń dla Hooka useNexus
-// Ważne: To mówi TypeScriptowi, co zwraca hook w zależności od parametrów.
 
 /**
  * Przeciążenie dla zapytań (GET).
@@ -122,7 +113,6 @@ export function useNexus(params: NexusQuery | NexusCommand): unknown {
   // Obsługa zapytań (GET)
   if (params.type === "GET") {
     const queryParams = params as NexusQuery;
-    // Domyślny selectorKey to 'value', jeśli nie podano innego
     const selectorKey = queryParams.selectorKey || "value";
     return NexusStrategies.GET.useExecute({
       slice: normalizedSlice,

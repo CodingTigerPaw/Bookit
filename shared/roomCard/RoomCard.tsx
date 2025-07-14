@@ -1,19 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-
-type roomType = {
-  $id: string;
-  user_id: string;
-  name: string;
-  description: string;
-  sqft: number;
-  capacity: number;
-  address: string;
-  amenities: string;
-  availability: string;
-  price_per_hour: number;
-  image: string;
-};
+import { roomType } from "@/redux/types/roomType";
 
 type roomCardProps = {
   room: roomType;
