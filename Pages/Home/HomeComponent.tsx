@@ -1,30 +1,24 @@
 "use client";
-import rooms from "@/data/rooms.json";
 import { useNexus } from "@/utils/hooka/useNexus";
 import { HomeView } from "./HomeView";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { getAllRooms } from "@/app/actions/getAllRooms";
 import { roomType } from "@/redux/types/roomType";
 
 export const HomeComponent = () => {
-  const getRoomValue: roomType[] =
-    useNexus({
-      slice: "room",
-      type: "GET",
-      selectorKey: "rooms",
-    }) ?? [];
-
-  const setRooms = useNexus({
+  const setValue = useNexus({
     slice: "room",
     type: "POST",
   });
-
   useEffect(() => {
-    setRooms(rooms);
-  }, [setRooms]);
+    const testAsync = async () => {
+      const data = await getAllRooms();
+      setData(data);
+      setValue(data);
+    };
+    testAsync();
+  }, []);
+  const [data, setData] = useState<roomType[]>([]);
 
-  return (
-    <>
-      <HomeView rooms={getRoomValue} />
-    </>
-  );
+  return <HomeView rooms={data} />;
 };
